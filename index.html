@@ -42,14 +42,26 @@
   var data = [100, 150, 60, 80, 140]
 
   function render(data){
+    // add data
     d3.select("#plotArea").selectAll(".bar")
       .data(data).enter().append("div")
       .attr("class", "bar")
       .style("width", 0)
+
+    // update data
+    d3.select("#plotArea").selectAll(".bar")
       .transition()
       .duration(1000)
       .style("width", function(d){return d+"px"})
       .text(function(d){return d})
+
+    // remove data
+    d3.select("#plotArea").selectAll(".bar").data(data)
+      .exit()
+      .transition()
+      .duration(1000)
+      .style('opacity', 0)
+      .remove()
 
     d3.select("#plotArea").selectAll(".bar")
     .on("mouseover",  function(d){
