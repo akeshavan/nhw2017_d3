@@ -44,6 +44,15 @@
   newdiv.appendChild(document.createTextNode("80"));
   document.body.appendChild(newdiv);
 
+  var myElements = document.getElementsByClassName("bar")
+
+  for (i=0; i<myElements.length; i++){
+    myElements[i].addEventListener("click", function(e){
+      e.target.style.background = "black" // change the style of the clicked element
+    })
+  }
+
+
   </script>
 
 </html>
