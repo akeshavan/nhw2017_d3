@@ -27,6 +27,9 @@
     <p> This is a paragraph </p>
     <a href="http://www.google.com"> here is a link </a>
     <h3> My first bar graph with div elements</h3>
+    <button onclick="addData()"> Add data </button>
+    <button onclick="randomData()"> Randomize data </button>
+    <button onclick="removeData()"> Remove data </button>
     <div id="plotArea"></div>
 
   </body>
@@ -38,14 +41,15 @@
 
   var data = [100, 150, 60, 80, 140]
 
-  d3.select("#plotArea").selectAll(".bar")
-    .data(data).enter().append("div")
-    .attr("class", "bar")
-    .style("width", 0)
-    .transition()
-    .duration(1000)
-    .style("width", function(d){return d+"px"})
-    .text(function(d){return d})
+  function render(data){
+    d3.select("#plotArea").selectAll(".bar")
+      .data(data).enter().append("div")
+      .attr("class", "bar")
+      .style("width", 0)
+      .transition()
+      .duration(1000)
+      .style("width", function(d){return d+"px"})
+      .text(function(d){return d})
 
     d3.select("#plotArea").selectAll(".bar")
     .on("mouseover",  function(d){
@@ -67,6 +71,30 @@
       d3.select("#plotArea").selectAll(".bar")
         .data(data)
     })
+  }
+
+  render(data)
+
+  function randomInt(min, max){
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  function addData(){
+    data.push(randomInt(30,200)) //append a random number to data
+    render(data)
+  }
+
+  function randomData(){
+    for (i=0; i<data.length; i++){
+      data[i] = randomInt(30,200)
+    }
+    render(data)
+  }
+
+  function removeData(){
+    data.pop() //remove last element
+    render(data)
+  }
 
   </script>
 
