@@ -27,9 +27,7 @@
     <p> This is a paragraph </p>
     <a href="http://www.google.com"> here is a link </a>
     <h3> My first bar graph with div elements</h3>
-    <div class="bar" style="width: 100px;">100</div>
-    <div class="bar" style="width: 150px;">150</div>
-    <div class="bar" style="width: 60px;">60</div>
+    <div id="plotArea"></div>
 
   </body>
 
@@ -38,20 +36,16 @@
   <script src="js/jquery.min.js"></script>
   <script>
 
-  var newdiv = document.createElement("div");
-  newdiv.className = "bar";
-  newdiv.style.width = "80px";
-  newdiv.appendChild(document.createTextNode("80"));
-  document.body.appendChild(newdiv);
+  var data = [100, 150, 60, 80, 140]
 
-  var myElements = document.getElementsByClassName("bar")
-
-  for (i=0; i<myElements.length; i++){
-    myElements[i].addEventListener("click", function(e){
-      e.target.style.background = "black" // change the style of the clicked element
+  d3.select("#plotArea").selectAll(".bar")
+    .data(data).enter().append("div")
+    .attr("class", "bar")
+    .style("width", function(d){return d+"px"})
+    .text(function(d){return d})
+    .on("click", function(d){
+      d3.select(this).style("background", "black")
     })
-  }
-
 
   </script>
 
