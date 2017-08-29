@@ -41,10 +41,31 @@
   d3.select("#plotArea").selectAll(".bar")
     .data(data).enter().append("div")
     .attr("class", "bar")
+    .style("width", 0)
+    .transition()
+    .duration(1000)
     .style("width", function(d){return d+"px"})
     .text(function(d){return d})
-    .on("click", function(d){
+
+    d3.select("#plotArea").selectAll(".bar")
+    .on("mouseover",  function(d){
       d3.select(this).style("background", "black")
+    })
+    .on("mouseout",  function(d){
+      d3.select(this).style("background", "steelblue")
+    })
+    .on("click", function(d, i){
+      d3.select(this)
+        .transition()
+        .ease(d3.easeBounce)
+        .duration(1000)
+        .style("width", function(d){return d*1.5+"px"})
+        .text(function(d){return d*1.5})
+
+      //re-bind the data
+      data[i] = data[i] * 1.5
+      d3.select("#plotArea").selectAll(".bar")
+        .data(data)
     })
 
   </script>
