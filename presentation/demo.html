@@ -422,10 +422,6 @@ d3.select("#plotArea").selectAll(".bar")
 			<script type="text/template">
 		### Transitions
 
-		```bash
-		git checkout tags/step06 -b sixth_step
-		```
-
 		Adding transitions is simple:
 		```javascript
 		d3.select("#plotArea").selectAll(".bar")
@@ -480,6 +476,10 @@ d3.select("#plotArea").selectAll(".bar")
 ### Result:
 
 ![](d3Animation.gif)
+
+```bash
+git checkout tags/step06 -b sixth_step
+```
 
 </script>
 </section>
@@ -788,7 +788,23 @@ function renderAxes(data){
 		>>> 280.00000000000006
 
 		```
-		* 0.5 mapped to 280 px
+		* 2.1 mapped to 280 px
+
+	</script>
+</section>
+
+<section data-markdown>
+	<script type="text/template">
+		### Add an SVG tag in HTML
+
+
+		```html
+		<h3> Below is a scatter plot: </h3>
+		<svg id="scatterArea"></svg>
+
+		```
+
+		We will select `#scatterArea` and append our elements there
 
 	</script>
 </section>
@@ -849,27 +865,156 @@ function renderAxes(data){
 	</script>
 </section>
 
-<section data-markdown>
-	<script type="text/template">
+<section>
 
+		<img src="d3Axes.png">
 
-		![](d3Axes.png)
-
-	</script>
 </section>
 
 <section data-markdown>
 	<script type="text/template">
+		### Catch up:
 
 		```bash
 		git checkout tags/step08 -b step08
 		```
 
+	</script>
+</section>
+
+<section data-markdown>
+	<script type="text/template">
+		### Save your axes
+First, return some values from the `renderAxes` function:
+		```javascript
+		return {svg: svg,
+			    xScale: xScale,
+			    yScale: yScale,
+			    xValue: xValue,
+			    yValue: yValue,
+			    xAxis: xAxis,
+			    yAxis: yAxis
+			    }
+		ax = renderAxes(scatterData)
+		```
 
 	</script>
 </section>
 
 
+<section data-markdown>
+	<script type="text/template">
+		### Redefine axes scales
+		Define a `scatterPoints` function.
+
+		```javascript
+		function scatterPoints(ax, data){
+
+			// set domain again in case data changed bounds
+			xScale.domain([d3.min(data, ax.xValue), d3.max(data, ax.xValue)])
+			yScale.domain([d3.min(data, ax.xValue), d3.max(data, ax.yValue)])
+
+			// redraw axes by selecting their class .x.axis .y.axis
+			ax.svg.selectAll(".x.axis").call(ax.xAxis)
+			ax.svg.selectAll(".y.axis").call(ax.yAxis)
+
+		}
+
+		ax = renderAxes(scatterData)
+		scatterPoints(ax, scatterData)
+		```
+
+		If the data range changes, the axes should redraw
+
+	</script>
+</section>
+
+
+<section data-markdown>
+	<script type="text/template">
+		### Adding Data
+		Similar to the bar example, create a class:
+
+```css
+.dot {
+			stroke: #313E50; /*circle border*/
+			fill: steelblue; /*circle color*/
+			r: 7; /*circle radius*/
+}
+```
+		Bind data, enter and append
+		```javascript
+function scatterPoints(ax, data){
+	...
+  //add data
+  ax.svg.selectAll(".dot")
+	 .data(data)
+	 .enter().append("circle")
+	 .attr("class", "dot")
+
+		```
+
+	</script>
+</section>
+
+<section data-markdown>
+	<script type="text/template">
+		### Update Data
+		 and add transitions
+		```javascript
+function scatterPoints(ax, data){
+	...
+  //update data
+  ax.svg.selectAll(".dot")
+	 .attr("cx", function(d){return ax.xScale(ax.xValue(d))})
+	 .transition()
+	 .duration(1000)
+	 .attr("cy", function(d){return ax.yScale(ax.yValue(d))})
+		```
+
+	</script>
+</section>
+
+
+<section data-markdown>
+	<script type="text/template">
+		### Remove Data
+
+		```javascript
+function scatterPoints(ax, data){
+	...
+	//remove dots
+	ax.svg.selectAll(".dot")
+	.data(data)
+	.exit()
+	.transition()
+	.duration(1000)
+	.style('opacity', 1e-6)
+	.attr("cy", function(d){return 0})
+	.remove();
+}
+```
+
+</script>
+</section>
+
+<section data-markdown>
+	<script type="text/template">
+		### Result
+		![](scatterConsole.gif)
+
+</script>
+</section>
+
+<section data-markdown>
+	<script type="text/template">
+		### Resources
+
+		* [square.github.io D3 tutorial](https://square.github.io/intro-to-d3/web-standards/)
+		* [Aysegul Yonet's tutorial](http://yonet.github.io/d3-codeclass/#/)
+
+</script>
+</section>
 
 
 
