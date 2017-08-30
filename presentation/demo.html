@@ -630,7 +630,7 @@ Try it out. Does this work?
 <section data-markdown>
 	<script type="text/template">
 		### The Remove
-		* `exit().remove("div")` removes any extra elements leftover
+		* `exit().remove()` removes any extra elements leftover
 
 		```javascript
 		// remove data
@@ -665,6 +665,214 @@ git checkout tags/step07 -b step07
 
 </script>
 </section>
+
+
+<section data-markdown>
+	<script type="text/template">
+### SVG
+
+* HTML alone isn't enough to render all the graphs we want
+* **SVG** : Scaleable Vector Graphics: similar to HTML. Attribute names are a little different
+* You can have shapes like `<circle>` `<rect>` and `<line>`
+* Next up, a scatter plot
+
+</script>
+</section>
+
+<section data-markdown>
+	<script type="text/template">
+### SVG & Axes: Mapping numbers to pixels
+
+* When we draw on SVG, our coordinates are in **pixels**
+* D3 has functions to map data to pixels
+* First, create a new function:
+
+```javascript
+
+function renderAxes(data){
+	//define margins on the plot -- this will give room for axes labels, titles
+	var margin = {top: 20, right: 20, bottom: 30, left: 60}
+
+	// total dimensions are 500x300
+	var width = 500 - margin.left - margin.right
+	var height = 300 - margin.top - margin.bottom
+
+}
+
+```
+
+
+</script>
+</section>
+
+<section data-markdown>
+	<script type="text/template">
+### Define data and its callbacks
+
+```javascript
+var scatterData = [
+	{x: 0.5, y: 20},
+	{x: 2.1, y: 12},
+	{x: 1.4, y: 5.2},
+	{x: 2.9, y: 9.6}
+]
+
+renderAxes(scatterData)
+```
+
+In our function. define our data callbacks:
+```javascript
+function renderAxes(data){
+	...
+	var height = 300 - margin.top - margin.bottom
+
+	// data struct -> x value
+	var xValue = function(d) { return d.x;}
+	var yValue = function(d) { return d.y;}
+}
+
+```
+
+
+</script>
+</section>
+
+<section data-markdown>
+	<script type="text/template">
+### d3.scaleLinear: numbers to pixels
+
+* Next use `d3.scaleLinear` to create a function that maps a value to a pixel
+
+```javascript
+function renderAxes(data){
+	...
+
+	var yValue = function(d) { return d.y;}
+
+	// value -> display
+	xScale = d3.scaleLinear().range([0, width])
+	yScale = d3.scaleLinear().range([height, 0]),
+	// in SVG, y=0 is at the top, so we switch the order
+}
+
+```
+
+</script>
+</section>
+
+<section data-markdown>
+	<script type="text/template">
+		### Set the Domain
+
+		* Make sure the max value of our data maps to the max pixel in SVG
+
+		```javascript
+		// now the range [0, width] maps to [0, max(data)]
+		xScale.domain([d3.min(data, xValue), d3.max(data, xValue)])
+		yScale.domain([d3.min(data, xValue), d3.max(data, yValue)])
+
+		```
+
+	</script>
+</section>
+
+<section data-markdown>
+	<script type="text/template">
+		### Check the console
+
+		* Click on the console tab in the developer tools and type:
+
+		```javascript
+		xScale(scatterData[1].x)
+
+		>>> 280.00000000000006
+
+		```
+		* 0.5 mapped to 280 px
+
+	</script>
+</section>
+
+<section data-markdown>
+	<script type="text/template">
+		### SVG Group
+
+		* In SVG, define a group, `<g>`.
+
+		```javascript
+		var svg = d3.select("#scatterArea")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+		```
+		Here, the `svg` variable contains a group that is translated by margins
+		(to make room for axis labels, titles, etc..)
+
+	</script>
+</section>
+
+<section data-markdown>
+	<script type="text/template">
+		### Axes Objects
+
+		* Define Axes objects with `d3.axisBottom` and `d3.axisLeft`:
+
+		```javascript
+			xAxis = d3.axisBottom(xScale) //axis object
+			yAxis = d3.axisLeft(yScale)
+		```
+
+	</script>
+</section>
+
+<section data-markdown>
+	<script type="text/template">
+		### Draw the Axes
+
+		* To draw axes, use `call`:
+
+		```javascript
+		// x-axis
+		 svg.append("g")
+		 .attr("class", "x axis")
+		 //take X to bottom of SVG
+		 .attr("transform", "translate(0," + height + ")")
+		 .call(xAxis)
+
+		 // y-axis
+		 svg.append("g")
+		 .attr("class", "y axis")
+		 .call(yAxis)
+		```
+
+	</script>
+</section>
+
+<section data-markdown>
+	<script type="text/template">
+
+
+		![](d3Axes.png)
+
+	</script>
+</section>
+
+<section data-markdown>
+	<script type="text/template">
+
+		```bash
+		git checkout tags/step08 -b step08
+		```
+
+
+	</script>
+</section>
+
+
+
+
+
 
 				<section id="themes">
 					<h2>Choose the theme</h2>
