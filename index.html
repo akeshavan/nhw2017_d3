@@ -16,6 +16,12 @@
       padding-top: 5px;
     }
 
+    .dot {
+      stroke: #313E50; /*circle border*/
+      fill: steelblue; /*circle color*/
+      r: 7; /*circle radius*/
+    }
+
     </style>
 
   </head>
@@ -154,6 +160,50 @@
      .attr("class", "y axis")
      .call(yAxis)
 
+    return {svg: svg,
+            xScale: xScale,
+            yScale: yScale,
+            xValue: xValue,
+            yValue: yValue,
+            xAxis: xAxis,
+            yAxis: yAxis
+            }
+
+  }
+
+  function scatterPoints(ax, data){
+
+    // set domain again in case data changed bounds
+    xScale.domain([d3.min(data, ax.xValue), d3.max(data, ax.xValue)])
+    yScale.domain([d3.min(data, ax.xValue), d3.max(data, ax.yValue)])
+
+    //redraw axis
+    ax.svg.selectAll(".x.axis").call(ax.xAxis)
+    ax.svg.selectAll(".y.axis").call(ax.yAxis)
+
+    //add data
+    ax.svg.selectAll(".dot")
+     .data(data)
+     .enter().append("circle")
+       .attr("class", "dot")
+
+    //update data
+    ax.svg.selectAll(".dot")
+       .attr("cx", function(d){return ax.xScale(ax.xValue(d))})
+       .transition()
+         .duration(1000)
+         .attr("cy", function(d){return ax.yScale(ax.yValue(d))})
+
+
+   //remove dots
+   ax.svg.selectAll(".dot")
+      .data(data)
+      .exit()
+      .transition()
+      .duration(1000)
+       .style('opacity', 1e-6)
+       .attr("cy", function(d){return 0})
+       .remove();
   }
 
   var scatterData = [
@@ -163,7 +213,8 @@
     {x: 2.9, y: 9.6}
 ]
 
-renderAxes(scatterData)
+ax = renderAxes(scatterData)
+scatterPoints(ax, scatterData)
 
 
   </script>
