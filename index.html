@@ -3,6 +3,8 @@
 
   <head>
     <title> Neurohackweek 2017 D3 Tutorial </title>
+    <link href="https://fonts.googleapis.com/css?family=Nunito+Sans" rel="stylesheet">
+
     <!-- Style definitions will go in the <style> tags -->
     <style>
 
@@ -12,8 +14,14 @@
       margin: 5px;
       color: white;
       text-align: right;
-      padding-right: 5px;
       padding-top: 5px;
+      display: inline-block;
+
+    }
+
+    .barText {
+      display: inline-block;
+      width: 75px;
     }
 
     .dot {
@@ -22,24 +30,62 @@
       r: 7; /*circle radius*/
     }
 
+    body {
+      font-family: "Nunito Sans", sans-serif;
+    }
+
+    select {
+      height: 30px;
+      background: white;
+      font-size: inherit;
+      font-family: inherit;
+      font-weight: inherit;
+      border-style: dashed;
+    }
+
+    a {
+      color: steelblue;
+    }
+
+    .main {
+      display: table;
+      margin: 0 auto;
+    }
+
     </style>
 
   </head>
 
   <!-- Content goes in the body -->
   <body>
+    <div class="main">
+    <h1> Neurohackweek 2017 D3 Tutorial</h1>
+    <p> The tutorial for this website can be found <a href="https://akeshavan.github.io/nhw2017_d3/presentation/index.html"> here </a>.</p>
+    <p> The <a href="http://mriqc.readthedocs.io/en/stable/"> mriqc </a> data comes from <a href="https://mriqc.nimh.nih.gov/"> here </a>. </p>
+    <p> Mouse over a histogram bar to highlight the corresponding points in the scatter plot (and vice versa).
+    </p>
+    <p>Use the selection dropdowns to switch variables.
+    </p>
 
-    <h1> Hello World </h1>
-    <p> This is a paragraph </p>
-    <a href="http://www.google.com"> here is a link </a>
-    <h3> My first bar graph with div elements</h3>
-    <button onclick="addData()"> Add data </button>
-    <button onclick="randomData()"> Randomize data </button>
-    <button onclick="removeData()"> Remove data </button>
+    <h3> MRIQC T1 Histogram</h3>
+    <!-- The <select> HTML creates a dropdown menu -->
+    <select id="histSelect" onchange="setKey(this)">
+      <!-- option describes each option-->
+      <option value="snr_total">snr_total</option>
+    </select>
+
     <div id="plotArea"></div>
-    <h3> Below is a scatter plot: </h3>
+    <h3> Scatterplot of:
+       <select id="ySelect" onchange="setY(this)">
+         <option value="cnr">cnr</option>
+       </select>
+       vs
+       <select id="xSelect" onchange="setX(this)">
+         <option value="snr_total">snr_total</option>
+       </select>
+    </h3>
     <svg id="scatterArea"></svg>
-
+  </div>
   </body>
 
   <!-- Import Javascript files here-->
@@ -47,75 +93,91 @@
   <script src="js/jquery.min.js"></script>
   <script>
 
-  var data = [100, 150, 60, 80, 140]
 
-  function render(data){
+  function renderBar(data, widthName, textName, ylabelName){
+    /*
+      inputs:
+        * data = object to bind to DOM
+        * widthName = key name of data object that corresponds to bar width
+        * textName = key name of data object that corresponds to bar value
+        * ylabelName = key name of bin value
+    */
+
+
     // add data
-    d3.select("#plotArea").selectAll(".bar")
+
+    // in this case, we want to add y-axis labels.
+    /*
+      We want the HTML to look like:
+      <div class="barContainer">
+        <div class="barText">
+           binText (like 0-2)
+        </div>
+        <div class="bar">
+        </div>
+      </div>
+    */
+    var bars = d3.select("#plotArea").selectAll(".barContainer")
       .data(data).enter().append("div")
+      .attr("class", "barContainer")
+
+    bars.append("div")
+      .attr("class", "barText")
+
+    bars.append("div")
       .attr("class", "bar")
       .style("width", 0)
 
+
+    // update text
+    d3.select("#plotArea").selectAll(".barText").data(data)
+      .text(function(d){
+        return d[ylabelName]
+      })
+
     // update data
-    d3.select("#plotArea").selectAll(".bar")
+    d3.select("#plotArea").selectAll(".bar").data(data)
       .transition()
       .duration(1000)
-      .style("width", function(d){return d+"px"})
-      .text(function(d){return d})
+      .style("width", function(d){return d[widthName]+"px"})
+      .text(function(d){return d[textName]})
+
+    // if a bar has 0 width, set the padding to 0
+    // this is so things look nice
+    d3.select("#plotArea").selectAll(".bar")
+      .each(function(d){
+        if (d[widthName]){
+          d3.select(this).style("padding-right", "5px")
+        } else {
+          d3.select(this).style("padding-right", "0px")
+        }
+      })
 
     // remove data
-    d3.select("#plotArea").selectAll(".bar").data(data)
+    d3.select("#plotArea").selectAll(".barContainer").data(data)
       .exit()
       .transition()
       .duration(1000)
       .style('opacity', 0)
       .remove()
 
+    // add some events! when you mouse over a bar
+    // highlight the corresponding points in the scatter plot
     d3.select("#plotArea").selectAll(".bar")
     .on("mouseover",  function(d){
       d3.select(this).style("background", "black")
+      d3.select("#scatterArea").selectAll(".dot").each(function(dScat){
+          if (dScat[d.key] < d.data.x1 && dScat[d.key] >= d.data.x0){
+          d3.select(this).style("fill", "black")
+        }
+      })
     })
     .on("mouseout",  function(d){
       d3.select(this).style("background", "steelblue")
+      d3.select("#scatterArea").selectAll(".dot").style("fill", "steelblue")
     })
-    .on("click", function(d, i){
-      d3.select(this)
-        .transition()
-        .ease(d3.easeBounce)
-        .duration(1000)
-        .style("width", function(d){return d*1.5+"px"})
-        .text(function(d){return d*1.5})
 
-      //re-bind the data
-      data[i] = data[i] * 1.5
-      d3.select("#plotArea").selectAll(".bar")
-        .data(data)
-    })
   }
-
-  render(data)
-
-  function randomInt(min, max){
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
-
-  function addData(){
-    data.push(randomInt(30,200)) //append a random number to data
-    render(data)
-  }
-
-  function randomData(){
-    for (i=0; i<data.length; i++){
-      data[i] = randomInt(30,200)
-    }
-    render(data)
-  }
-
-  function removeData(){
-    data.pop() //remove last element
-    render(data)
-  }
-
 
 
   function renderAxes(data){
@@ -126,18 +188,12 @@
       var width = 500 - margin.left - margin.right
       var height = 300 - margin.top - margin.bottom
 
-      // data struct -> x value
-    var xValue = function(d) { return d.x;}
-    var yValue = function(d) { return d.y;}
 
     // value -> display
     xScale = d3.scaleLinear().range([0, width])
-    yScale = d3.scaleLinear().range([height, 0]),
+    yScale = d3.scaleLinear().range([height, 0])
     // in SVG, y=0 is at the top, so we switch the order
 
-    // now the range [0, width] maps to [0, max(data)]
-    xScale.domain([d3.min(data, xValue), d3.max(data, xValue)])
-    yScale.domain([d3.min(data, xValue), d3.max(data, yValue)])
 
     var svg = d3.select("#scatterArea")
     .attr("width", width + margin.left + margin.right)
@@ -154,32 +210,58 @@
      //take X to bottom of SVG
      .attr("transform", "translate(0," + height + ")")
      .call(xAxis)
+     .append("text")
+      .attr("class", "label")
+      .attr("x", width)
+      .attr("y", -6)
+      .attr("font-size", "2em")
+      .style("text-anchor", "end")
+      .style("fill", "black")
+      .text("X");
+
 
     // y-axis
     svg.append("g")
      .attr("class", "y axis")
      .call(yAxis)
+     .append("text")
+      .attr("class", "label")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 6)
+      .attr("dy", ".71em")
+      .attr("font-size", "2em")
+      .style("text-anchor", "end")
+      .style("fill", "black")
+      .text("Y");
 
     return {svg: svg,
             xScale: xScale,
             yScale: yScale,
-            xValue: xValue,
-            yValue: yValue,
             xAxis: xAxis,
             yAxis: yAxis
             }
 
   }
 
-  function scatterPoints(ax, data){
+  function scatterPoints(ax, data, xName, yName){
+
+    xValue = function(d){return d[xName]}
+    yValue = function(d){return d[yName]}
 
     // set domain again in case data changed bounds
-    xScale.domain([d3.min(data, ax.xValue), d3.max(data, ax.xValue)])
-    yScale.domain([d3.min(data, ax.xValue), d3.max(data, ax.yValue)])
+    xScale.domain([d3.min(data, xValue), d3.max(data, xValue)])
+    yScale.domain([d3.min(data, yValue), d3.max(data, yValue)])
 
     //redraw axis
-    ax.svg.selectAll(".x.axis").call(ax.xAxis)
-    ax.svg.selectAll(".y.axis").call(ax.yAxis)
+    ax.svg.selectAll(".x.axis")
+      .call(ax.xAxis)
+      .selectAll(".label")
+      .text(xName)
+
+    ax.svg.selectAll(".y.axis")
+      .call(ax.yAxis)
+      .selectAll(".label")
+      .text(yName)
 
     //add data
     ax.svg.selectAll(".dot")
@@ -189,10 +271,25 @@
 
     //update data
     ax.svg.selectAll(".dot")
-       .attr("cx", function(d){return ax.xScale(ax.xValue(d))})
+       .attr("cx", function(d){return ax.xScale(xValue(d))})
        .transition()
          .duration(1000)
-         .attr("cy", function(d){return ax.yScale(ax.yValue(d))})
+         .attr("cy", function(d){return ax.yScale(yValue(d))})
+
+    // events: when you highlight a dot, highlight the corresponding histogram bar
+    ax.svg.selectAll(".dot")
+      .on("mouseover", function(d){
+        d3.select(this).style("fill", "black")
+        d3.select("#plotArea").selectAll(".bar").each(function(dBar){
+          if (d[dBar.key] < dBar.data.x1 && d[dBar.key]  >= dBar.data.x0){
+            d3.select(this).style("background", "black")
+          }
+        })
+      })
+      .on("mouseout", function(){
+        ax.svg.selectAll(".dot").style("fill", "steelblue")
+        d3.select("#plotArea").selectAll(".bar").style("background", "steelblue")
+      })
 
 
    //remove dots
@@ -206,15 +303,133 @@
        .remove();
   }
 
-  var scatterData = [
-    {x: 0.5, y: 20},
-    {x: 2.1, y: 12},
-    {x: 1.4, y: 5.2},
-    {x: 2.9, y: 9.6}
-]
+// initialize some variables
+// they exist in the global scope
+var qc_data, snr = [], hist, hist_data,x,y, histogram_data, ax, Xkey, Ykey;
 
-ax = renderAxes(scatterData)
-scatterPoints(ax, scatterData)
+function setBarMetric(qc_data, keyName){
+  /*
+  This function processes qc_data into histogram_data
+  Then, the bar graph is rendered
+  */
+  snr = []
+  qc_data.forEach(function(val, idx, arr){
+    snr.push(val[keyName])
+  })
+
+  // our histogram widths need to be scaled
+  x = d3.scaleLinear()
+      .range([0, 300])
+      .domain([Math.floor(d3.min(snr)), Math.ceil(d3.max(snr))])
+
+  y = d3.scaleLinear()
+      .range([0, 300])
+      .domain([0, qc_data.length])
+
+  // d3.histogram() returns a function
+  hist = d3.histogram().domain(x.domain())
+  hist_data = hist(snr)
+
+  // hisogram_data is the data we will evenutally bind to our chart
+  histogram_data = []
+
+  // forEach is another way to do a for loop
+  hist_data.forEach(function(val, idx, arr){
+    // val is the item in hist_data, idx is the index, and arr is the whole array
+    histogram_data.push({width: y(val.length), //width of bar
+                         text: val.length, //text to write on the bar
+                         bin: val.x0+"-"+val.x1, //name of the bin
+                         data: val, // the rest of the histogram data
+                         key: keyName //the name of the metric we are plotting
+                       })
+  })
+
+  // now that our data is prepared, render the bar chart
+  renderBar(histogram_data, 'width', 'text', 'bin')
+}
+
+// The following function set the bar and scatter plots based on
+// the values selected in the <select> inputs
+
+function setKey(obj){
+  var key = obj.options[obj.selectedIndex].text
+  setBarMetric(qc_data, key)
+}
+
+function setX(obj){
+  Xkey = obj.options[obj.selectedIndex].text
+  scatterPoints(ax, qc_data, Xkey, Ykey)
+}
+
+function setY(obj){
+  Ykey = obj.options[obj.selectedIndex].text
+  scatterPoints(ax, qc_data, Xkey, Ykey)
+}
+
+// $.get is a jQuery function to get data from another server
+$.get("https://mriqc.nimh.nih.gov/api/v1/T1w", function(qcdata_remote){
+  // this is the callback function from $.get
+  // its first argument is the remote data
+
+  // define our qc_data, and some initial variables to plot
+  qc_data = qcdata_remote._items;
+  Xkey = "snr_total"
+  Ykey = "cnr"
+  var initKey = "snr_total"
+
+  console.log("data from the mriqc server is", qc_data)
+
+  // fill the select boxes with the keys in qc_data
+  d3.select("#histSelect").selectAll("option")
+    .data(d3.keys(qc_data[0]))
+    .enter().append("option")
+
+  d3.select("#histSelect").selectAll("option")
+    .attr("value", function(d){return d})
+    .text(function(d){return d}).each(function(d){
+      if (d==initKey){
+        d3.select(this).attr("selected", "selected")
+      }
+    })
+
+  d3.select("#xSelect").selectAll("option")
+    .data(d3.keys(qc_data[0]))
+    .enter().append("option")
+
+  d3.select("#xSelect").selectAll("option")
+    .attr("value", function(d){return d})
+    .text(function(d){return d}).each(function(d){
+      if (d==Xkey){
+        d3.select(this).attr("selected", "selected")
+      }
+    })
+
+  d3.select("#ySelect").selectAll("option")
+    .data(d3.keys(qc_data[0]))
+    .enter().append("option")
+
+  d3.select("#ySelect").selectAll("option")
+    .attr("value", function(d){return d})
+    .text(function(d){return d}).each(function(d){
+      if (d==Ykey){
+        d3.select(this).attr("selected", "selected")
+      }
+    })
+
+
+
+  //draw the bar graph
+  setBarMetric(qc_data, initKey)
+
+  //draw the scatter plot
+  ax = renderAxes(qc_data);
+  scatterPoints(ax, qc_data, Xkey, Ykey)
+
+})
+
+
+
+
 
 
   </script>
