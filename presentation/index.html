@@ -1,13 +1,21 @@
 <!doctype html>
-<html>
+<html lang="en">
+
 	<head>
 		<meta charset="utf-8">
+
+		<title>Neurohackweek 2017 D3 Tutorial</title>
+
+		<meta name="description" content="A framework for easily creating beautiful presentations using HTML">
+		<meta name="author" content="Hakim El Hattab">
+
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<title>reveal.js</title>
-
 		<link rel="stylesheet" href="css/reveal.css">
-		<link rel="stylesheet" href="css/theme/black.css">
+		<link rel="stylesheet" href="css/theme/black.css" id="theme">
 
 		<!-- Theme used for syntax highlighting of code -->
 		<link rel="stylesheet" href="lib/css/zenburn.css">
@@ -20,30 +28,1046 @@
 			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
 			document.getElementsByTagName( 'head' )[0].appendChild( link );
 		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
 	</head>
+
 	<body>
+
 		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
 			<div class="slides">
-				<section>Slide 1</section>
-				<section>Slide 2</section>
+
+
+				<section  id="title">
+
+					<h1> Interactive Data Visualization with D3.js</h1>
+					<p>
+						<small>Created by <a href="http://akeshavan.github.io">Anisha Keshavan</a> / <a href="http://twitter.com/akeshavan_">@akeshavan_</a></small>
+					</p>
+
+				</section>
+
+				<section id="why">
+          <h3>Why is interactive data viz important?</h3>
+          <ul>
+            <li> Our datasets are getting <i>larger</i></li>
+            <li> Our datasets are <i> multidimensional </i></li>
+            <li> Our datasets are hard to <i> understand </i></li>
+            <li> We need ways to connect
+              <i class="tt" id="iviz" data-tooltip="Like scatterplots, barplots" data-tooltip-position="bottom center"> information visualization
+              </i>
+              with
+              <i class="tt" id="sviz" data-tooltip="Like MRI scans, streamlines, surfaces" data-tooltip-position="top right"> scientific data visualization </i> </li>
+
+          </ul>
+
+        </section>
+
+        <section id="what">
+          <h3>What is <a href="http://d3js.org">D3.js </a>?</h3>
+          <ul>
+            <li>A JavaScript library for manipulating HTML</li>
+            <li>There are thousands of beautiful <a href="https://github.com/d3/d3/wiki/Gallery">examples</a></li>
+          </ul>
+        </section>
+
+        <section>
+          <h3>But, its hard</h3>
+          <ul>
+            <li>The examples aren't very reusable</li>
+          </ul>
+        </section>
+
+        <section id="others">
+          <h3>What about...</h3>
+          <ul>
+            <li><a href="https://plot.ly/">Plotly</a></li>
+            <li><a href="http://nvd3.org/">NVD3</a></li>
+            <li><a href="http://dimplejs.org/">Dimple</a></li>
+            <li><a href="https://vega.github.io/vega/">Vega</a></li>
+            <li><a href="http://c3js.org/">C3.js</a></li>
+            <li><a href="https://dc-js.github.io/dc.js/">DC.js</a></li>
+          </ul>
+        </section>
+
+        <section id="basics">
+          <h3>These libraries are great, but</h3>
+          <ul>
+          <li> Sometimes we need to tweak them </li>
+          <li class="fragment"> So, we need to start with the basics...</li>
+          </ul>
+        </section>
+
+        <section id="intro">
+          <h3>3 Parts to all websites:</h3>
+          <ul>
+          <li> HTML: the <b>content</b> </li>
+          <li> CSS: the <b> style </b> </li>
+          <li> JS: the <b> interaction </b> </li>
+          </ul>
+        </section>
+
+				<section data-markdown>
+					<script type="text/template">
+						### Setup
+
+						```bash
+						git clone https://github.com/akeshavan/nhw_d3
+						cd nhw_d3
+						git fetch --all --tags --prune
+						git checkout tags/step01 -b first_step
+						python -m http.server #python 2: python -m SimpleHTTPServer
+						```
+
+						Open [google chrome](https://www.google.com/chrome/browser/desktop/index.html) and navigate to http://localhost:8000
+
+					</script>
+				</section>
+
+				<section data-markdown>
+					<script type="text/template">
+						### HTML, HEAD and BODY
+
+						Open index.html in a text editor:
+
+						```html
+						<!DOCTYPE html>
+						<html lang="en">
+						  <head>
+								<!-- Style definitions will go in the <style> tags -->
+								<style>
+								</style>
+						  </head>
+							<!-- Content goes in the body -->
+						  <body>
+						  </body>
+							<!-- Import Javascript files here-->
+						</html>
+
+						```
+
+
+
+					</script>
+				</section>
+
+
+				<section data-markdown>
+					<script type="text/template">
+						### Tags
+
+						* There are standard tags that tell browsers the structure of the content
+						* Most tags are wrapped in `<tagname>` and end with `</tagname>`
+						* <a href="https://www.w3schools.com/TAGs/default.asp">Here</a> is a list of all tags
+						* In the body, type:
+
+						```html
+							<h1> Hello World </h1>
+							<p> This is a paragraph </p>
+							<a href="http://www.google.com"> here is a link </a>
+						```
+
+						* reload http://localhost:8000 in chrome
+						* go to View > Developer > Developer Tools
+
+					</script>
+				</section>
+
+				<section data-markdown>
+					<script type="text/template">
+						### The Document Object Model
+
+						![](devtools.png)
+
+					</script>
+				</section>
+
+				<section data-markdown>
+					<script type="text/template">
+						### The div element and style
+
+						* The `<div>` element defines a section. In the body, add:
+
+						```html
+						<div class="bar" style="width: 100px;">100</div>
+<div class="bar" style="width: 150px;">150</div>
+<div class="bar" style="width: 60px;">60</div>
+						```
+
+						*  in the `<style></style>` tag, add:
+
+						```css
+						.bar {
+							background: steelblue; /* color of bars */
+							height: 30px; /* height/width of bars */
+							margin: 5px; /* spacing between bars */
+							color: white; /* text color */
+							text-align: right;
+							padding-right: 5px; /* space between text and right of bar */
+							padding-top: 5px; /* space between text and top of bar */
+						}
+
+						```
+
+					</script>
+				</section>
+
+				<section data-markdown>
+					<script type="text/template">
+						### Step 2: First bar graph
+
+						![](first_bar.png)
+
+						```bash
+						git checkout tags/step02 -b second_step
+						```
+
+					</script>
+				</section>
+
+				<section data-markdown>
+					<script type="text/template">
+						### Step 2: First bar graph
+
+						* we defined a <b>class</b> for the style of our divs
+						* we also gave each `<div>` its own `width` property
+						* try changing style of bar graph on devtools
+						* try adding more bars
+
+					</script>
+				</section>
+
+				<section data-markdown>
+					<script type="text/template">
+						### JavaScript: Manipulate the DOM
+
+						* We can dynamically add bars to our page. Create new <`script`> tags and add:
+						```javascript
+						var newdiv = document.createElement("DIV");
+						newdiv.className = "bar";
+						newdiv.style.width = "80px";
+						newdiv.appendChild(document.createTextNode("80"));
+						document.body.appendChild(newdiv);
+						```
+						or
+
+						```bash
+						git checkout tags/step03 -b third_step
+						```
+
+					</script>
+				</section>
+
+				<section data-markdown>
+					<script type="text/template">
+						### JavaScript: Add interaction
+
+						* We can even add some interaction. In the <`script`> tag:
+
+						```javascript
+						// get all elements with class = "bar"
+						var myElements = document.getElementsByClassName("bar")
+						//myElements is a list
+
+						//iterate through the list in a for loop
+						for (i=0; i<myElements.length; i++){
+							// the second arg to addEventListener is a callback
+							myElements[i].addEventListener("click", function(e){
+								// change the style of the clicked element
+								e.target.style.background = "black"
+							})
+						}
+						```
+
+					</script>
+				</section>
+
+				<section data-markdown>
+					<script type="text/template">
+						### Step 4: Interaction
+
+						![](jsInteraction.png)
+
+						```bash
+						git checkout tags/step04 -b fourth_step
+						```
+
+					</script>
+				</section>
+
+				<section data-markdown>
+					<script type="text/template">
+						### D3
+
+						makes manipulating the DOM easier
+
+					</script>
+				</section>
+
+				<section data-markdown>
+					<script type="text/template">
+						### D3 Bar chart
+
+						in the body, add a `div` with an `id` attribute
+
+						```html
+						<div id="plotArea"></div>
+						```
+
+						in the <`script`> section, do
+
+						```javascript
+						var data = [100, 150, 60, 80, 140]
+
+d3.select("#plotArea").selectAll(".bar")
+  .data(data).enter().append("div")
+  .attr("class", "bar")
+  .style("width", function(d){return d+"px"})
+  .text(function(d){return d})
+  .on("click", function(d){
+    d3.select(this).style("background", "black")
+  })
+						```
+
+					</script>
+				</section>
+
+				<section data-markdown>
+					<script type="text/template">
+						### Break it down
+
+						Define some data as a list:
+
+						```javascript
+						var data = [100, 150, 60, 80, 140]
+						```
+						Select an element with the id `plotArea`
+
+						```javascript
+						d3.select("#plotArea")
+						```
+
+						Select all elements with class `bar` within `plotArea`:
+
+						```javascript
+						d3.select("#plotArea").selectAll(".bar")
+							```
+
+						Bind data to these elements:
+
+						```javascript
+						d3.select("#plotArea").selectAll(".bar").data(data)
+						```
+
+					</script>
+				</section>
+
+				<section data-markdown>
+					<script type="text/template">
+						### Break it down
+
+						But the elements aren't created yet. Enter and append creates new divs.
+
+						```javascript
+						.enter().append("div")
+						```
+						Give the elements the `bar` class
+
+						```javascript
+						.attr("class", "bar")
+						```
+
+						Set the width for each element based on its bound data:
+
+						```javascript
+						.style("width", function(d){return d+"px"})
+							```
+
+					</script>
+				</section>
+
+
+				<section data-markdown>
+					<script type="text/template">
+				Add text based on the bound data:
+
+				```javascript
+				.text(function(d){return d})
+				```
+
+				Add a `click` listener:
+
+				```javascript
+				.on("click", function(d){
+					    d3.select(this).style("background", "black")
+					  })
+				```
+
+				where `this` is the particular element that was clicked, and d is its data
+
+				To catch up:
+
+				```bash
+				git checkout tags/step05 -b fifth_step
+				```
+
+			</script>
+		</section>
+
+		<section data-markdown>
+			<script type="text/template">
+		### Transitions
+
+		Adding transitions is simple:
+		```javascript
+		d3.select("#plotArea").selectAll(".bar")
+	    .data(data).enter().append("div")
+	    .attr("class", "bar")
+	    .style("width", 0) //initially set the bar width to 0
+	    .transition() //transition
+	    .duration(1000) //duration is 1000ms
+			//bars will start at 0 and "grow" to the correct height
+	    .style("width", function(d){return d+"px"})
+	    .text(function(d){return d})
+		```
+
+	</script>
+</section>
+
+<section data-markdown>
+	<script type="text/template">
+### Transitions
+
+Lets change our event listeners.
+Change color on hover, and grow when clicked:
+
+```javascript
+d3.select("#plotArea").selectAll(".bar")
+.on("mouseover",  function(d){
+	d3.select(this).style("background", "black")
+})
+.on("mouseout",  function(d){
+	d3.select(this).style("background", "steelblue")
+})
+.on("click", function(d, i){
+	d3.select(this)
+		.transition()
+		.ease(d3.easeBounce) //make it bounce!
+		.duration(1000)
+		.style("width", function(d){return d*1.5+"px"})
+		.text(function(d){return d*1.5})
+
+	//re-bind the data
+	data[i] = data[i] * 1.5
+	d3.select("#plotArea").selectAll(".bar")
+		.data(data)
+})
+```
+
+</script>
+</section>
+
+<section data-markdown>
+	<script type="text/template">
+### Result:
+
+![](d3Animation.gif)
+
+```bash
+git checkout tags/step06 -b sixth_step
+```
+
+</script>
+</section>
+
+
+<section data-markdown>
+	<script type="text/template">
+### Updating data:
+
+* We have realtime data streaming in
+* We want to dynamically change the data to switch between variables
+
+```bash
+git checkout tags/step07brk -b brkstep7
+```
+
+</script>
+</section>
+
+<section data-markdown>
+	<script type="text/template">
+
+in the body:
+
+```html
+<h3> My first bar graph with div elements</h3>
+<button onclick="addData()"> Add data </button>
+<button onclick="randomData()"> Randomize data </button>
+<button onclick="removeData()"> Remove data </button>
+<div id="plotArea"></div>
+```
+
+</script>
+</section>
+
+<section data-markdown>
+	<script type="text/template">
+
+
+in the script, move our d3 lines into a function
+
+```javascript
+function render(data){
+	d3.select("#plotArea").selectAll(".bar")
+		.data(data).enter().append("div")
+		.attr("class", "bar")
+		.style("width", 0)
+		.transition()
+		.duration(1000)
+		.style("width", function(d){return d+"px"})
+		.text(function(d){return d})
+
+	d3.select("#plotArea").selectAll(".bar")
+	.on("mouseover",  function(d){
+		d3.select(this).style("background", "black")
+	})
+	.on("mouseout",  function(d){
+		d3.select(this).style("background", "steelblue")
+	})
+	.on("click", function(d, i){
+		d3.select(this)
+			.transition()
+			.ease(d3.easeBounce)
+			.duration(1000)
+			.style("width", function(d){return d*1.5+"px"})
+			.text(function(d){return d*1.5})
+
+		//re-bind the data
+		data[i] = data[i] * 1.5
+		d3.select("#plotArea").selectAll(".bar")
+			.data(data)
+	})
+}
+
+render(data)
+```
+
+</script>
+</section>
+
+
+<section data-markdown>
+	<script type="text/template">
+
+
+Also, add the functions for our buttons:
+
+```javascript
+function randomInt(min, max){
+	// return a random integer between min and max
+	return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function addData(){
+	data.push(randomInt(30,200)) //append a random number to data
+	render(data)
+}
+
+function randomData(){
+	for (i=0; i<data.length; i++){
+		data[i] = randomInt(30,200)
+	}
+	render(data)
+}
+
+function removeData(){
+	data.pop() //remove last element
+	render(data)
+}
+```
+
+Try it out. Does this work?
+
+</script>
+</section>
+
+<section data-markdown>
+	<script type="text/template">
+		# Its Broken
+		Which buttons work? Which do not?
+
+</script>
+</section>
+
+
+<section data-markdown>
+	<script type="text/template">
+		### The Update
+		* `enter().append("div")` only adds new divs and applies following methods to new items
+		* split up adding data and updating the DOM:
+
+		```javascript
+		d3.select("#plotArea").selectAll(".bar")
+			.data(data).enter().append("div")
+			.attr("class", "bar")
+			.style("width", 0)
+
+		d3.select("#plotArea").selectAll(".bar")
+			.transition()
+			.duration(1000)
+			.style("width", function(d){return d+"px"})
+			.text(function(d){return d})
+		```
+
+</script>
+</section>
+
+<section data-markdown>
+	<script type="text/template">
+		### The Remove
+		* `exit().remove()` removes any extra elements leftover
+
+		```javascript
+		// remove data
+		d3.select("#plotArea").selectAll(".bar").data(data)
+			.exit()
+			.remove()
+		```
+
+		or, with a transition:
+
+		```javascript
+    d3.select("#plotArea").selectAll(".bar").data(data)
+      .exit()
+      .transition()
+      .duration(1000)
+      .style('opacity', 0)
+      .remove()
+		```
+
+</script>
+</section>
+
+<section data-markdown>
+	<script type="text/template">
+### Result:
+
+![](d3_step07.gif)
+
+```bash
+git checkout tags/step07 -b step07
+```
+
+</script>
+</section>
+
+
+<section data-markdown>
+	<script type="text/template">
+### SVG
+
+* HTML alone isn't enough to render all the graphs we want
+* **SVG** : Scaleable Vector Graphics: similar to HTML. Attribute names are a little different
+* You can have shapes like `<circle>` `<rect>` and `<line>`
+* Next up, a scatter plot
+
+</script>
+</section>
+
+<section data-markdown>
+	<script type="text/template">
+### SVG & Axes: Mapping numbers to pixels
+
+* When we draw on SVG, our coordinates are in **pixels**
+* D3 has functions to map data to pixels
+* First, create a new function:
+
+```javascript
+
+function renderAxes(data){
+	//define margins on the plot -- this will give room for axes labels, titles
+	var margin = {top: 20, right: 20, bottom: 30, left: 60}
+
+	// total dimensions are 500x300
+	var width = 500 - margin.left - margin.right
+	var height = 300 - margin.top - margin.bottom
+
+}
+
+```
+
+
+</script>
+</section>
+
+<section data-markdown>
+	<script type="text/template">
+### Define data and its callbacks
+
+```javascript
+var scatterData = [
+	{x: 0.5, y: 20},
+	{x: 2.1, y: 12},
+	{x: 1.4, y: 5.2},
+	{x: 2.9, y: 9.6}
+]
+
+renderAxes(scatterData)
+```
+
+In our function. define our data callbacks:
+```javascript
+function renderAxes(data){
+	...
+	var height = 300 - margin.top - margin.bottom
+
+	// data struct -> x value
+	var xValue = function(d) { return d.x;}
+	var yValue = function(d) { return d.y;}
+}
+
+```
+
+
+</script>
+</section>
+
+<section data-markdown>
+	<script type="text/template">
+### d3.scaleLinear: numbers to pixels
+
+* Next use `d3.scaleLinear` to create a function that maps a value to a pixel
+
+```javascript
+function renderAxes(data){
+	...
+
+	var yValue = function(d) { return d.y;}
+
+	// value -> display
+	xScale = d3.scaleLinear().range([0, width])
+	yScale = d3.scaleLinear().range([height, 0]),
+	// in SVG, y=0 is at the top, so we switch the order
+}
+
+```
+
+</script>
+</section>
+
+<section data-markdown>
+	<script type="text/template">
+		### Set the Domain
+
+		* Make sure the max value of our data maps to the max pixel in SVG
+
+		```javascript
+		// now the range [0, width] maps to [0, max(data)]
+		xScale.domain([d3.min(data, xValue), d3.max(data, xValue)])
+		yScale.domain([d3.min(data, xValue), d3.max(data, yValue)])
+
+		```
+
+	</script>
+</section>
+
+<section data-markdown>
+	<script type="text/template">
+		### Check the console
+
+		* Click on the console tab in the developer tools and type:
+
+		```javascript
+		xScale(scatterData[1].x)
+
+		>>> 280.00000000000006
+
+		```
+		* 2.1 mapped to 280 px
+
+	</script>
+</section>
+
+<section data-markdown>
+	<script type="text/template">
+		### Add an SVG tag in HTML
+
+
+		```html
+		<h3> Below is a scatter plot: </h3>
+		<svg id="scatterArea"></svg>
+
+		```
+
+		We will select `#scatterArea` and append our elements there
+
+	</script>
+</section>
+
+<section data-markdown>
+	<script type="text/template">
+		### SVG Group
+
+		* In SVG, define a group, `<g>`.
+
+		```javascript
+		var svg = d3.select("#scatterArea")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+		```
+		Here, the `svg` variable contains a group that is translated by margins
+		(to make room for axis labels, titles, etc..)
+
+	</script>
+</section>
+
+<section data-markdown>
+	<script type="text/template">
+		### Axes Objects
+
+		* Define Axes objects with `d3.axisBottom` and `d3.axisLeft`:
+
+		```javascript
+			xAxis = d3.axisBottom(xScale) //axis object
+			yAxis = d3.axisLeft(yScale)
+		```
+
+	</script>
+</section>
+
+<section data-markdown>
+	<script type="text/template">
+		### Draw the Axes
+
+		* To draw axes, use `call`:
+
+		```javascript
+		// x-axis
+		 svg.append("g")
+		 .attr("class", "x axis")
+		 //take X to bottom of SVG
+		 .attr("transform", "translate(0," + height + ")")
+		 .call(xAxis)
+
+		 // y-axis
+		 svg.append("g")
+		 .attr("class", "y axis")
+		 .call(yAxis)
+		```
+
+	</script>
+</section>
+
+<section>
+
+		<img src="d3Axes.png">
+
+</section>
+
+<section data-markdown>
+	<script type="text/template">
+		### Catch up:
+
+		```bash
+		git checkout tags/step08 -b step08
+		```
+
+	</script>
+</section>
+
+<section data-markdown>
+	<script type="text/template">
+		### Save your axes
+First, return some values from the `renderAxes` function:
+		```javascript
+		return {svg: svg,
+			    xScale: xScale,
+			    yScale: yScale,
+			    xValue: xValue,
+			    yValue: yValue,
+			    xAxis: xAxis,
+			    yAxis: yAxis
+			    }
+		ax = renderAxes(scatterData)
+		```
+
+	</script>
+</section>
+
+
+<section data-markdown>
+	<script type="text/template">
+		### Redefine axes scales
+		Define a `scatterPoints` function.
+
+		```javascript
+		function scatterPoints(ax, data){
+
+			// set domain again in case data changed bounds
+			xScale.domain([d3.min(data, ax.xValue), d3.max(data, ax.xValue)])
+			yScale.domain([d3.min(data, ax.xValue), d3.max(data, ax.yValue)])
+
+			// redraw axes by selecting their class .x.axis .y.axis
+			ax.svg.selectAll(".x.axis").call(ax.xAxis)
+			ax.svg.selectAll(".y.axis").call(ax.yAxis)
+
+		}
+
+		ax = renderAxes(scatterData)
+		scatterPoints(ax, scatterData)
+		```
+
+		If the data range changes, the axes should redraw
+
+	</script>
+</section>
+
+
+<section data-markdown>
+	<script type="text/template">
+		### Adding Data
+		Similar to the bar example, create a class:
+
+```css
+.dot {
+			stroke: #313E50; /*circle border*/
+			fill: steelblue; /*circle color*/
+			r: 7; /*circle radius*/
+}
+```
+		Bind data, enter and append
+		```javascript
+function scatterPoints(ax, data){
+	...
+  //add data
+  ax.svg.selectAll(".dot")
+	 .data(data)
+	 .enter().append("circle")
+	 .attr("class", "dot")
+
+		```
+
+	</script>
+</section>
+
+<section data-markdown>
+	<script type="text/template">
+		### Update Data
+		 and add transitions
+		```javascript
+function scatterPoints(ax, data){
+	...
+  //update data
+  ax.svg.selectAll(".dot")
+	 .attr("cx", function(d){return ax.xScale(ax.xValue(d))})
+	 .transition()
+	 .duration(1000)
+	 .attr("cy", function(d){return ax.yScale(ax.yValue(d))})
+		```
+
+	</script>
+</section>
+
+
+<section data-markdown>
+	<script type="text/template">
+		### Remove Data
+
+		```javascript
+function scatterPoints(ax, data){
+	...
+	//remove dots
+	ax.svg.selectAll(".dot")
+	.data(data)
+	.exit()
+	.transition()
+	.duration(1000)
+	.style('opacity', 1e-6)
+	.attr("cy", function(d){return 0})
+	.remove();
+}
+```
+
+</script>
+</section>
+
+<section data-markdown>
+	<script type="text/template">
+		### Result
+		![](scatterConsole.gif)
+
+</script>
+</section>
+
+<section data-markdown>
+	<script type="text/template">
+		### Resources
+
+		* [square.github.io D3 tutorial](https://square.github.io/intro-to-d3/web-standards/)
+		* [Aysegul Yonet's tutorial](http://yonet.github.io/d3-codeclass/#/)
+
+</script>
+</section>
+
+
+
+
+				<section id="themes">
+					<h2>Choose the theme</h2>
+					<p>
+						reveal.js comes with a few themes built in: <br>
+						<!-- Hacks to swap themes after the page has loaded. Not flexible and only intended for the reveal.js demo deck. -->
+						<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/black.css'); return false;">Black (default)</a> -
+						<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/white.css'); return false;">White</a> -
+						<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/league.css'); return false;">League</a> -
+						<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/sky.css'); return false;">Sky</a> -
+						<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/beige.css'); return false;">Beige</a> -
+						<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/simple.css'); return false;">Simple</a> <br>
+						<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/serif.css'); return false;">Serif</a> -
+						<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/blood.css'); return false;">Blood</a> -
+						<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/night.css'); return false;">Night</a> -
+						<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/moon.css'); return false;">Moon</a> -
+						<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/solarized.css'); return false;">Solarized</a>
+					</p>
+				</section>
+
 			</div>
+
 		</div>
 
 		<script src="lib/js/head.min.js"></script>
 		<script src="js/reveal.js"></script>
 
 		<script>
-			// More info about config & dependencies:
-			// - https://github.com/hakimel/reveal.js#configuration
-			// - https://github.com/hakimel/reveal.js#dependencies
+
+			// More info https://github.com/hakimel/reveal.js#configuration
 			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+				// More info https://github.com/hakimel/reveal.js#dependencies
 				dependencies: [
-					{ src: 'plugin/markdown/marked.js' },
-					{ src: 'plugin/markdown/markdown.js' },
-					{ src: 'plugin/notes/notes.js', async: true },
-					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true },
+					{ src: 'plugin/notes/notes.js', async: true }
 				]
 			});
+
 		</script>
+
 	</body>
 </html>
