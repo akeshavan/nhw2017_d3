@@ -29,6 +29,26 @@
 			document.getElementsByTagName( 'head' )[0].appendChild( link );
 		</script>
 
+		<style>
+
+		i {
+			color: #F52F57;
+		}
+
+		b {
+			color: #F52F57;
+		}
+
+		code {
+			color: #F7B267;
+		}
+
+		strong {
+			color: #F52F57;
+		}
+
+		</style>
+
 		<!--[if lt IE 9]>
 		<script src="lib/js/html5shiv.js"></script>
 		<![endif]-->
@@ -56,7 +76,7 @@
           <ul>
             <li> Our datasets are getting <i>larger</i></li>
             <li> Our datasets are <i> multidimensional </i></li>
-            <li> Our datasets are hard to <i> understand </i></li>
+            <li> Our datasets are getting less <i> intuitive </i></li>
             <li> We need ways to connect
               <i class="tt" id="iviz" data-tooltip="Like scatterplots, barplots" data-tooltip-position="bottom center"> information visualization
               </i>
@@ -70,8 +90,9 @@
         <section id="what">
           <h3>What is <a href="http://d3js.org">D3.js </a>?</h3>
           <ul>
-            <li>A JavaScript library for manipulating HTML</li>
-            <li>There are thousands of beautiful <a href="https://github.com/d3/d3/wiki/Gallery">examples</a></li>
+						<li> Data Driven Documents </li>
+            <li>A JavaScript library for manipulating HTML based on data</li>
+            <li>There are many beautiful <a href="https://github.com/d3/d3/wiki/Gallery">examples</a></li>
           </ul>
         </section>
 
@@ -98,7 +119,7 @@
           <h3>These libraries are great, but</h3>
           <ul>
           <li> Sometimes we need to tweak them </li>
-          <li class="fragment"> So, we need to start with the basics...</li>
+          <li class="fragment"> So, we need to start with the <b>basics</b>...</li>
           </ul>
         </section>
 
@@ -109,50 +130,14 @@
           <li> CSS: the <b> style </b> </li>
           <li> JS: the <b> interaction </b> </li>
           </ul>
+					<br>
+					Open the <a href="https://codepen.io/akeshavan/pen/qXLGXy">CodePen</a> to get started
         </section>
 
-				<section data-markdown>
-					<script type="text/template">
-						### Setup
-
-						```bash
-						git clone https://github.com/akeshavan/nhw_d3
-						cd nhw_d3
-						git fetch --all --tags --prune
-						git checkout tags/step01 -b first_step
-						python -m http.server #python 2: python -m SimpleHTTPServer
-						```
-
-						Open [google chrome](https://www.google.com/chrome/browser/desktop/index.html) and copy/paste the full path to your file in the browser bar.
-
-					</script>
-				</section>
-
-				<section data-markdown>
-					<script type="text/template">
-						### HTML, HEAD and BODY
-
-						Open index.html in a text editor:
-
-						```html
-						<!DOCTYPE html>
-						<html lang="en">
-						  <head>
-								<!-- Style definitions will go in the <style> tags -->
-								<style>
-								</style>
-						  </head>
-							<!-- Content goes in the body -->
-						  <body>
-						  </body>
-							<!-- Import Javascript files here-->
-						</html>
-
-						```
 
 
+				<section data-background-iframe="https://codepen.io/akeshavan/pen/qXLGXy" data-background-interactive>
 
-					</script>
 				</section>
 
 
@@ -163,17 +148,8 @@
 						* There are standard tags that tell browsers the structure of the content
 						* Most tags are wrapped in `<tagname>` and end with `</tagname>`
 						* <a href="https://www.w3schools.com/TAGs/default.asp">Here</a> is a list of all tags
-						* In the body, type:
-
-						```html
-							<h1> Hello World </h1>
-							<p> This is a paragraph </p>
-							<a href="http://www.google.com"> here is a link </a>
-						```
-
-						* reload your page in chrome
-						* go to View > Developer > Developer Tools
-
+						* Tags have different attributes, (like `href` for the `<a>` tag)	and styles
+						* The `<div>` tag defines a section. It can be empty, or have child elements
 					</script>
 				</section>
 
@@ -216,27 +192,16 @@
 					</script>
 				</section>
 
-				<section data-markdown>
-					<script type="text/template">
-						### Step 2: First bar graph
-
-						![](first_bar.png)
-
-						```bash
-						git checkout tags/step02 -b second_step
-						```
-
-					</script>
+				<section data-background-iframe="https://codepen.io/akeshavan/pen/brOyLE" data-background-interactive>
 				</section>
 
 				<section data-markdown>
 					<script type="text/template">
 						### Step 2: First bar graph
 
-						* we defined a <b>class</b> for the style of our divs
+						* we defined a <b>class</b> for the style of our divs (bar)
+						* all divs with class `bar` have the same style
 						* we also gave each `<div>` its own `width` property
-						* try changing style of bar graph on devtools
-						* try adding more bars
 
 					</script>
 				</section>
@@ -245,7 +210,8 @@
 					<script type="text/template">
 						### JavaScript: Manipulate the DOM
 
-						* We can dynamically add bars to our page. Create new <`script`> tags and add:
+						* We can dynamically add bars to our page:
+
 						```javascript
 						var newdiv = document.createElement("DIV");
 						newdiv.className = "bar";
@@ -253,20 +219,19 @@
 						newdiv.appendChild(document.createTextNode("80"));
 						document.body.appendChild(newdiv);
 						```
-						or
 
-						```bash
-						git checkout tags/step03 -b third_step
-						```
 
 					</script>
+				</section>
+
+				<section data-background-iframe="https://codepen.io/akeshavan/pen/xLmNYz" data-background-interactive>
 				</section>
 
 				<section data-markdown>
 					<script type="text/template">
 						### JavaScript: Add interaction
 
-						* We can even add some interaction. In the <`script`> tag:
+						* We can even add some interaction:
 
 						```javascript
 						// get all elements with class = "bar"
@@ -286,17 +251,7 @@
 					</script>
 				</section>
 
-				<section data-markdown>
-					<script type="text/template">
-						### Step 4: Interaction
-
-						![](jsInteraction.png)
-
-						```bash
-						git checkout tags/step04 -b fourth_step
-						```
-
-					</script>
+				<section data-background-iframe="https://codepen.io/akeshavan/pen/OjrYvP" data-background-interactive>
 				</section>
 
 				<section data-markdown>
@@ -318,7 +273,7 @@
 						<div id="plotArea"></div>
 						```
 
-						in the <`script`> section, do
+						in the javascript section, do
 
 						```javascript
 						var data = [100, 150, 60, 80, 140]
@@ -336,10 +291,11 @@ d3.select("#plotArea").selectAll(".bar")
 					</script>
 				</section>
 
+				<section data-background-iframe="https://codepen.io/akeshavan/pen/rzogdY" data-background-interactive>
+				</section>
+
 				<section data-markdown>
 					<script type="text/template">
-						### Break it down
-
 						Define some data as a list:
 
 						```javascript
@@ -368,8 +324,6 @@ d3.select("#plotArea").selectAll(".bar")
 
 				<section data-markdown>
 					<script type="text/template">
-						### Break it down
-
 						But the elements aren't created yet. Enter and append creates new divs.
 
 						```javascript
@@ -407,13 +361,7 @@ d3.select("#plotArea").selectAll(".bar")
 					  })
 				```
 
-				where `this` is the particular element that was clicked, and d is its data
-
-				To catch up:
-
-				```bash
-				git checkout tags/step05 -b fifth_step
-				```
+				where `this` is the particular element that was clicked, and `d` is its data
 
 			</script>
 		</section>
@@ -471,17 +419,7 @@ d3.select("#plotArea").selectAll(".bar")
 </script>
 </section>
 
-<section data-markdown>
-	<script type="text/template">
-### Result:
-
-![](d3Animation.gif)
-
-```bash
-git checkout tags/step06 -b sixth_step
-```
-
-</script>
+<section data-background-iframe="https://codepen.io/akeshavan/pen/vJvwRM" data-background-interactive>
 </section>
 
 
@@ -492,17 +430,13 @@ git checkout tags/step06 -b sixth_step
 * We have realtime data streaming in
 * We want to dynamically change the data to switch between variables
 
-```bash
-git checkout tags/step07brk -b brkstep7
-```
-
 </script>
 </section>
 
 <section data-markdown>
 	<script type="text/template">
 
-in the body:
+Create buttons to simulate streaming data:
 
 ```html
 <h3> My first bar graph with div elements</h3>
@@ -519,7 +453,8 @@ in the body:
 	<script type="text/template">
 
 
-in the script, move our d3 lines into a function
+in the script, move our d3 lines into a function.
+We will call it each time new data comes in
 
 ```javascript
 function render(data){
@@ -591,15 +526,17 @@ function removeData(){
 }
 ```
 
-Try it out. Does this work?
+Does this work?
 
 </script>
+</section>
+
+<section data-background-iframe="https://codepen.io/akeshavan/pen/RZEmyz" data-background-interactive>
 </section>
 
 <section data-markdown>
 	<script type="text/template">
 		# Its Broken
-		Which buttons work? Which do not?
 
 </script>
 </section>
@@ -653,17 +590,7 @@ Try it out. Does this work?
 </script>
 </section>
 
-<section data-markdown>
-	<script type="text/template">
-### Result:
-
-![](d3_step07.gif)
-
-```bash
-git checkout tags/step07 -b step07
-```
-
-</script>
+<section data-background-iframe="https://codepen.io/akeshavan/pen/XaowYZ" data-background-interactive>
 </section>
 
 
@@ -776,11 +703,12 @@ function renderAxes(data){
 	</script>
 </section>
 
+
 <section data-markdown>
 	<script type="text/template">
 		### Check the console
 
-		* Click on the console tab in the developer tools and type:
+		* Click on the console in [CodePen](https://codepen.io/akeshavan/pen/RZvNjQ) and do:
 
 		```javascript
 		xScale(scatterData[1].x)
@@ -793,10 +721,13 @@ function renderAxes(data){
 	</script>
 </section>
 
+<section data-background-iframe="https://codepen.io/akeshavan/pen/RZvNjQ" data-background-interactive>
+</section>
+
+
 <section data-markdown>
 	<script type="text/template">
 		### Add an SVG tag in HTML
-
 
 		```html
 		<h3> Below is a scatter plot: </h3>
@@ -823,7 +754,8 @@ function renderAxes(data){
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 		```
 		Here, the `svg` variable contains a group that is translated by margins
-		(to make room for axis labels, titles, etc..)
+		(to make room for axis labels, titles, etc..).
+		From now on, we want to append to this group, so we save the variable.
 
 	</script>
 </section>
@@ -865,22 +797,9 @@ function renderAxes(data){
 	</script>
 </section>
 
-<section>
-
-		<img src="d3Axes.png">
-
+<section data-background-iframe="https://codepen.io/akeshavan/pen/yoGWbg" data-background-interactive>
 </section>
 
-<section data-markdown>
-	<script type="text/template">
-		### Catch up:
-
-		```bash
-		git checkout tags/step08 -b step08
-		```
-
-	</script>
-</section>
 
 <section data-markdown>
 	<script type="text/template">
@@ -905,14 +824,14 @@ First, return some values from the `renderAxes` function:
 <section data-markdown>
 	<script type="text/template">
 		### Redefine axes scales
-		Define a `scatterPoints` function.
+		Define a `scatterPoints` function. We will call this to update the chart.
 
 		```javascript
 		function scatterPoints(ax, data){
 
 			// set domain again in case data changed bounds
-			xScale.domain([d3.min(data, ax.xValue), d3.max(data, ax.xValue)])
-			yScale.domain([d3.min(data, ax.xValue), d3.max(data, ax.yValue)])
+			ax.xScale.domain([d3.min(data, ax.xValue), d3.max(data, ax.xValue)])
+			ax.yScale.domain([d3.min(data, ax.xValue), d3.max(data, ax.yValue)])
 
 			// redraw axes by selecting their class .x.axis .y.axis
 			ax.svg.selectAll(".x.axis").call(ax.xAxis)
@@ -933,7 +852,7 @@ First, return some values from the `renderAxes` function:
 <section data-markdown>
 	<script type="text/template">
 		### Adding Data
-		Similar to the bar example, create a class:
+		Similar to the bar example, create a class in CSS:
 
 ```css
 .dot {
@@ -998,45 +917,130 @@ function scatterPoints(ax, data){
 </script>
 </section>
 
+<section data-background-iframe="https://codepen.io/akeshavan/pen/jLXopy" data-background-interactive>
+</section>
+
+
 <section data-markdown>
 	<script type="text/template">
-		### Result
-		![](scatterConsole.gif)
+		### Incorporating remote data
+
+		* d3 has functions, `d3.csv`, `d3.json`, `d3.tsv` to get data locally or from other servers
+		* jQuery has functions to get data from a web API with `$.get`
+		* Lets get [mriqc](http://mriqc.readthedocs.io/en/stable/) data from the [mriqc database](https://mriqc.nimh.nih.gov/)
+
 
 </script>
 </section>
 
 <section data-markdown>
 	<script type="text/template">
-		### Resources
+		### GETting
+
+		```javascript
+
+			$.get("/your/url", function(data){
+
+				// this is a callback function that gets data as its first arg
+				// manipulate the data and run your plotting functions here
+
+			})
+
+		```
+
+	</script>
+</section>
+
+<section data-markdown>
+	<script type="text/template">
+		### Select boxes
+
+		* in HTML, `<select>` boxes give us dropdown menus with options to pick
+		* since mriqc returns many metrics, we want to select 2 metrics to plot against each other.
+		* the HTML looks like:
+
+		```HTML
+		<select id="elementID" onchange="yourJSfunction(this)">
+			<!-- option describes each option-->
+			<option value="value_1">name 1</option>
+			<option value="value_2">name 2</option>
+			<option value="value_3">name 3</option>
+		</select>
+		```
+
+	</script>
+</section>
+
+<section data-markdown>
+	<script type="text/template">
+		### Iterating over elements
+
+		* Sometimes we may want to iterate over d3 selected elements
+		* use the `.each(callback)` method:
+
+		```javascript
+
+		d3.select(parentElement).selectAll(targetElements).each(function(d){
+			// again this is a callback function, where d is the element's data
+		})
+
+		```
+
+	</script>
+</section>
+
+<section data-background-iframe="https://codepen.io/akeshavan/pen/Jywqam" data-background-interactive>
+</section>
+
+
+<section data-markdown>
+	<script type="text/template">
+		### Summary
+
+		* HTML + SVG + CSS + JS
+		* Selectors (`d3.select().selectAll()`)
+		* Data binding (`.data(data)`)
+		* Setting styles (`.style()`) and attributes (`.attr()`)
+		* Events (`.on()`)
+		* Updaters (`d3.enter().append().exit().remove()`)
+		* Axes (`.range().domain()`)
+
+	</script>
+</section>
+
+<section data-markdown>
+	<script type="text/template">
+		### Examples binding 2D plots w/ 3D data
+
+		* [Mindcontrol](http://mindcontrol.herokuapp.com), for brain quality control
+		* [ROYGBIV](http://roygbiv.mindboggle.info), for visualizing Mindboggle outputs
+		* [AFQ-Browser](https://yeatmanlab.github.io/AFQBrowser-demo/), for visualizing AFQ outputs
+		* [MetaSearch](http://openneu.ro/metasearch/), search for open neuroimaging data
+		* [Medulina](http://medulina.com/dashboard.html?user_id=5991b1bdf441bd00082835a3), a dashboard for a game to crowdsource medical image segmentation
+
+	</script>
+</section>
+
+<section data-markdown>
+	<script type="text/template">
+		### Resources/References
 
 		* [square.github.io D3 tutorial](https://square.github.io/intro-to-d3/web-standards/)
 		* [Aysegul Yonet's tutorial](http://yonet.github.io/d3-codeclass/#/)
+		* [this scatterplot example](http://bl.ocks.org/weiglemc/6185069)
+
+</script>
+</section>
+
+<section data-markdown>
+	<script type="text/template">
+		### Questions?
 
 </script>
 </section>
 
 
 
-
-				<section id="themes">
-					<h2>Choose the theme</h2>
-					<p>
-						reveal.js comes with a few themes built in: <br>
-						<!-- Hacks to swap themes after the page has loaded. Not flexible and only intended for the reveal.js demo deck. -->
-						<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/black.css'); return false;">Black (default)</a> -
-						<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/white.css'); return false;">White</a> -
-						<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/league.css'); return false;">League</a> -
-						<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/sky.css'); return false;">Sky</a> -
-						<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/beige.css'); return false;">Beige</a> -
-						<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/simple.css'); return false;">Simple</a> <br>
-						<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/serif.css'); return false;">Serif</a> -
-						<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/blood.css'); return false;">Blood</a> -
-						<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/night.css'); return false;">Night</a> -
-						<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/moon.css'); return false;">Moon</a> -
-						<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/solarized.css'); return false;">Solarized</a>
-					</p>
-				</section>
 
 			</div>
 
