@@ -96,6 +96,9 @@
           </ul>
         </section>
 
+				<section data-background-iframe="http://www.r2d3.us/visual-intro-to-machine-learning-part-1/" data-background-interactive>
+				</section>
+
         <section>
           <h3>But, its hard</h3>
           <ul>
@@ -926,8 +929,7 @@ function scatterPoints(ax, data){
 		### Incorporating remote data
 
 		* d3 has functions, `d3.csv`, `d3.json`, `d3.tsv` to get data locally or from other servers
-		* jQuery has functions to get data from a web API with `$.get`
-		* Lets get [mriqc](http://mriqc.readthedocs.io/en/stable/) data from the [mriqc database](https://mriqc.nimh.nih.gov/)
+		* Lets get [mriqc](http://mriqc.readthedocs.io/en/stable/) JSON data from the [mriqc database](https://mriqc.nimh.nih.gov/)
 
 
 </script>
@@ -939,7 +941,7 @@ function scatterPoints(ax, data){
 
 		```javascript
 
-			$.get("/your/url", function(data){
+			d3.json("/your/url", function(data){
 
 				// this is a callback function that gets data as its first arg
 				// manipulate the data and run your plotting functions here
@@ -955,9 +957,7 @@ function scatterPoints(ax, data){
 	<script type="text/template">
 		### Select boxes
 
-		* in HTML, `<select>` boxes give us dropdown menus with options to pick
-		* since mriqc returns many metrics, we want to select 2 metrics to plot against each other.
-		* the HTML looks like:
+		* in HTML, `<select>` boxes give us dropdown menus with options to pick:
 
 		```HTML
 		<select id="elementID" onchange="yourJSfunction(this)">
@@ -969,6 +969,7 @@ function scatterPoints(ax, data){
 		```
 
 	</script>
+
 </section>
 
 <section data-markdown>
@@ -998,12 +999,12 @@ function scatterPoints(ax, data){
 		### Summary
 
 		* HTML + SVG + CSS + JS
-		* Selectors (`d3.select().selectAll()`)
-		* Data binding (`.data(data)`)
-		* Setting styles (`.style()`) and attributes (`.attr()`)
-		* Events (`.on()`)
-		* Updaters (`d3.enter().append().exit().remove()`)
-		* Axes (`.range().domain()`)
+		* Selectors: `d3.select().selectAll()`
+		* Data binding: `.data(data)`
+		* Setting styles: `.style()` and attributes: `.attr()`
+		* Events: `.on()`
+		* Updaters: `d3.enter().append()` and `.exit().remove()`
+		* Axes: `.range().domain()`
 
 	</script>
 </section>
@@ -1028,6 +1029,9 @@ function scatterPoints(ax, data){
 		* [square.github.io D3 tutorial](https://square.github.io/intro-to-d3/web-standards/)
 		* [Aysegul Yonet's tutorial](http://yonet.github.io/d3-codeclass/#/)
 		* [this scatterplot example](http://bl.ocks.org/weiglemc/6185069)
+		* [if you liked that scrolling animation](http://bl.ocks.org/tonyhschu/af64df46f7b5b760fc1db1260dd6ec6a)
+		  * [also this tutorial](http://vallandingham.me/scroller.html)
+		* d3 hierarchical circle plot for a [connectome](http://nbviewer.jupyter.org/gist/akeshavan/d41ea27d12bc9ff61b37319170e10898/arbitraryHclustering.ipynb)
 
 </script>
 </section>
