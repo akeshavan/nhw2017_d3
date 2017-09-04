@@ -93,6 +93,7 @@
 						<li> Data Driven Documents </li>
             <li>A JavaScript library for manipulating HTML based on data</li>
             <li>There are many beautiful <a href="https://github.com/d3/d3/wiki/Gallery">examples</a></li>
+						<li> I like this <a href="http://mbostock.github.io/d3/talk/20111116/bundle.html"> network diagram </a></li>
           </ul>
         </section>
 
@@ -105,7 +106,7 @@
         </section>
 
         <section id="others">
-          <h3>What about...</h3>
+          <h3>What about D3-based libraries?</h3>
           <ul>
             <li><a href="https://plot.ly/">Plotly</a></li>
             <li><a href="http://nvd3.org/">NVD3</a></li>
@@ -167,7 +168,7 @@
 					<script type="text/template">
 						### The div element and style
 
-						* The `<div>` element defines a section. In the body, add:
+						* The `<div>` element defines a section. In the `body` of HTML, add:
 
 						```html
 						<div class="bar" style="width: 100px;">100</div>
@@ -175,7 +176,7 @@
 <div class="bar" style="width: 60px;">60</div>
 						```
 
-						*  in the `<style></style>` tag, add:
+						*  in the `css` section, add:
 
 						```css
 						.bar {
@@ -198,11 +199,11 @@
 
 				<section data-markdown>
 					<script type="text/template">
-						### Step 2: First bar graph
+						### First bar graph
 
 						* we defined a <b>class</b> for the style of our divs (bar)
 						* all divs with class `bar` have the same style
-						* we also gave each `<div>` its own `width` property
+						* we also gave each `<div>` its own `width` property (different bar lengths)
 
 					</script>
 				</section>
